@@ -2,6 +2,7 @@
 import * as dotenv from 'dotenv'
 dotenv.config()
 
+// Create a bot process
 import { Client, GatewayIntentBits } from 'discord.js'
 
 // Create a new client instance
