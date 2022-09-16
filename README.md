@@ -1,2 +1,5 @@
-- Create `.env` file with TOKEN=DISCORD_TOKEN
+- Create `.env` file with
+    - `TOKEN = DISCORD_TOKEN`
+    - `RULES_WEBHOOK_ID = `
+    - `RULES_WEBHOOK_TOKEN =`
 - `npm run start` to initiate process
