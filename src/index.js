@@ -5,11 +5,11 @@ dotenv.config()
 import { Client, GatewayIntentBits } from 'discord.js'
 
 // Create a new client instance
-const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+const client = new Client({ intents: [GatewayIntentBits.Guilds] })
 
 // When the client is ready, run this code (only once)
 client.once('ready', () => {
-	console.log('Ready!');
+    console.log('Ready!')
 })
 
 async function main() {
