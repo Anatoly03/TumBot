@@ -32,13 +32,13 @@ async function message_incoming(message) {
 
     const thread = await create_user_thread(channel, message.author)
 
-    let response = new EmbedBuilder()
-        .setColor(0x5bc0de)
-        .setAuthor({
-            name: message.author.tag,
-            iconURL: message.author.avatarURL(),
-        })
-        .setDescription(message.content.substring(0, 1024))
+    let response = new EmbedBuilder().setColor(0x5bc0de).setAuthor({
+        name: message.author.tag,
+        iconURL: message.author.avatarURL(),
+    })
+
+    if (message.content.length > 0)
+        response.setDescription(message.content.substring(0, 1024))
 
     if (message.attachments.size == 1) {
         response.setImage(message.attachments.first().url)
@@ -79,13 +79,13 @@ async function message_outgoing(message) {
 
     const user = await message.client.users.fetch(user_id)
 
-    let response = new EmbedBuilder()
-        .setColor(0x5bc0de)
-        .setDescription(message.content.substring(0, 1024))
+    let response = new EmbedBuilder().setColor(0x5bc0de)
 
-    if (message.attachments.size == 1) {
+    if (message.content.length > 0)
+        response.setDescription(message.content.substring(0, 1024))
+
+    if (message.attachments.size == 1)
         response.setImage(message.attachments.first().url)
-    }
 
     user.send({
         embeds: [response],
