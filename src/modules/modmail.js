@@ -4,7 +4,7 @@ import {
     TextChannel,
     User,
     ThreadChannel,
-    ChannelType
+    ChannelType,
 } from 'discord.js'
 
 /**
@@ -40,9 +40,25 @@ async function message_incoming(message) {
         })
         .setDescription(message.content.substring(0, 1024))
 
+    if (message.attachments.size == 1) {
+        response.setImage(message.attachments.first().url)
+    }
+
     thread.send({
         embeds: [response],
     })
+
+    if (message.attachments.size > 1) {
+        for (let i = 0; i < message.attachments.size; i++) {
+            thread.send({
+                embeds: [
+                    new EmbedBuilder()
+                        .setColor(0x5bc0de)
+                        .setImage(message.attachments.map((j) => j.url)[i]),
+                ],
+            })
+        }
+    }
 
     links[message.author.id] = thread.id
 }
@@ -63,16 +79,29 @@ async function message_outgoing(message) {
 
     const user = await message.client.users.fetch(user_id)
 
-    console.log(message)
-    console.log(user)
-
     let response = new EmbedBuilder()
         .setColor(0x5bc0de)
         .setDescription(message.content.substring(0, 1024))
 
+    if (message.attachments.size == 1) {
+        response.setImage(message.attachments.first().url)
+    }
+
     user.send({
         embeds: [response],
     })
+
+    if (message.attachments.size > 1) {
+        for (let i = 0; i < message.attachments.size; i++) {
+            user.send({
+                embeds: [
+                    new EmbedBuilder()
+                        .setColor(0x5bc0de)
+                        .setImage(message.attachments.map((j) => j.url)[i]),
+                ],
+            })
+        }
+    }
 }
 
 /**
