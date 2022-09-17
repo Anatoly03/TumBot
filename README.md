@@ -1,5 +1,7 @@
 - Create `.env` file with
     - `TOKEN = DISCORD_TOKEN`
+    - `GUILD_ID =`
+    - `ADMIN_CHANNEL_ID = `
     - `RULES_WEBHOOK_ID = `
     - `RULES_WEBHOOK_TOKEN =`
 - `npm run start` to initiate process
