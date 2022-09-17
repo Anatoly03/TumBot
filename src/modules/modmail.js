@@ -44,7 +44,7 @@ async function message_incoming(message) {
         response.setImage(message.attachments.first().url)
     }
 
-    thread.send({
+    thread?.send({
         embeds: [response],
     })
 
@@ -111,9 +111,6 @@ async function message_outgoing(message) {
  * @description Create (or get, if existing) a thread for a user.
  */
 export async function create_user_thread(channel, author) {
-    /** @type {ThreadChannel} */
-    let thread
-
     async function spawn_thread() {
         let thread = await channel.threads.create({
             name: author.tag,
@@ -124,11 +121,16 @@ export async function create_user_thread(channel, author) {
         return thread
     }
 
-    if (!links[author.id]) return spawn_thread()
-    else {
-        let thread = await channel.threads.fetch(links[author.id])
-        if (thread.archived) return spawn_thread()
+    if (links[author.id]) {
+        try {
+            let thread = await channel.threads.fetch(links[author.id])
+            return thread
+        } catch(e) {
+            console.log(e)
+        }
     }
+
+    return spawn_thread()
 }
 
 /**
