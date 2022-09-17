@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "start": "node src/index.js",
-    "create-rules": "node src/index-rules.js",
+    "create-rules": "node src/rules.index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
