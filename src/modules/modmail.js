@@ -114,16 +114,21 @@ export async function create_user_thread(channel, author) {
     /** @type {ThreadChannel} */
     let thread
 
-    if (!links[author.id]) {
-        thread = await channel.threads.create({
+    async function spawn_thread() {
+        let thread = await channel.threads.create({
             name: author.tag,
             autoArchiveDuration: 60,
             reason: 'Modmail',
         })
         links[author.id] = thread.id
-    } else thread = await channel.threads.fetch(links[author.id])
+        return thread
+    }
 
-    return thread
+    if (!links[author.id]) return spawn_thread()
+    else {
+        let thread = await channel.threads.fetch(links[author.id])
+        if (thread.archived) return spawn_thread()
+    }
 }
 
 /**
