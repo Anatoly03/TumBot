@@ -22,11 +22,15 @@ const lang_embeds = {
         id_ask: VERIFY_EMBED.default.id_ask_de,
         email: VERIFY_EMBED.default.email_de,
         verified: VERIFY_EMBED.default.verified_de,
+        error_id: VERIFY_EMBED.default.error_id_de,
+        error_hash: VERIFY_EMBED.default.error_hash_de,
     },
     en: {
         id_ask: VERIFY_EMBED.default.id_ask_en,
         email: VERIFY_EMBED.default.email_en,
         verified: VERIFY_EMBED.default.verified_en,
+        error_id: VERIFY_EMBED.default.error_id_de,
+        error_hash: VERIFY_EMBED.default.error_hash_de,
     },
 }
 
@@ -123,15 +127,19 @@ async function askForTumID(user) {
     })
 
     collector.on('collect', async (message) => {
-        //find TUM IDs in message with regex
-        const idRegex = /[[:alpha:]]{2}[0-9]{2}[[:alpha:]]{3}/;
-        let matches = m.content.match(idRegex);
-        if (matches.length != 1) {
-            // dmChannel.send("Please send your TUM ID exactly once. It should look something like the following: ab12cde");
-            return;
+        // Find TUM ID in message
+        const idRegex = /[a-z]{2}[0-9]{2}[a-z]{3}/i
+        if (!idRegex.test(message.content)) {
+            const embed = lang_embeds[dm_link[user.id].verification.lang].error_id
+            user.send({
+                embeds: [embed],
+            })
+            await collector.stop()
+            askForTumID(user)
+            return
         }
 
-        dm_link[user.id].verification.TUM_ID = matches[0];
+        dm_link[user.id].verification.TUM_ID = message.content
         dm_link[user.id].verification.state = 2 // 2: await verification
         const embed = lang_embeds[dm_link[user.id].verification.lang].email
 
@@ -199,7 +207,6 @@ async function sendVerifyEmail(user, tum_id) {
 
         await collector.stop()
         console.log(message.content)
-
     })
 }
 

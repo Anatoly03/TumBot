@@ -110,7 +110,7 @@ export default {
     /*
      * This embed follows the third if the the verification hash is invalid.
      */
-    error_has_de: new EmbedBuilder()
+    error_hash_de: new EmbedBuilder()
         .setTitle('Ungültiger Hash!')
         .setColor(0xf27950)
         .setDescription(
