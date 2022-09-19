@@ -8,14 +8,18 @@ import {
 } from 'discord.js'
 
 /**
- * @type {{ [keys: string] : string}}
+ * @type {{ [keys: string] : {type : 'mail' | 'verify', thread?: number, verification?: any }}}
  * @description Links user ids to thread ids.
  *
  * ```
- * links["user_id"] = "thread_id"
+ * links["user_id"] = {
+ *      type: 'mail | verify',
+ *      thread?: "thread_id" // if type == mail,
+ *      verification?: // if type == verify
+ * }
  * ```
  */
-let links = {}
+export let links = {}
 
 /**
  * @param {Message} message
@@ -25,6 +29,9 @@ let links = {}
 async function message_incoming(message) {
     if (message.guildId) return // If in guild, ignore, otherwise dm
     if (message.author?.bot) return // If bot, ignore
+
+    // If user is currently in active communication with another module, ignore
+    if (links[message.author.id] && links[message.author.id].type != 'mail') return
 
     const guild = await message.client.guilds.fetch(process.env.GUILD_ID)
     const channel = await guild.channels.fetch(process.env.ADMIN_CHANNEL_ID)
@@ -60,7 +67,10 @@ async function message_incoming(message) {
         }
     }
 
-    links[message.author.id] = thread.id
+    links[message.author.id] = {
+        type: 'mail',
+        thread: thread.id
+    }
 }
 
 /**
@@ -73,7 +83,7 @@ async function message_outgoing(message) {
     if (message.channel.type !== ChannelType.PublicThread) return
 
     let user_id = Object.keys(links).find(
-        (key) => links[key] === message.channel.id
+        (key) => links[key].type == 'mail' && links[key].thread === message.channel.id
     )
     if (!user_id) return
 
@@ -117,13 +127,14 @@ export async function create_user_thread(channel, author) {
             autoArchiveDuration: 60,
             reason: 'Modmail',
         })
-        links[author.id] = thread.id
+        links[author.id] ||= {}
+        links[author.id].thread = thread.id
         return thread
     }
 
-    if (links[author.id]) {
+    if (links[author.id]?.type == 'mail') {
         try {
-            let thread = await channel.threads.fetch(links[author.id])
+            let thread = await channel.threads.fetch(links[author.id].thread)
             return thread
         } catch(e) {
             console.log(e)
