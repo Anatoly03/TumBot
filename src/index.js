@@ -21,7 +21,7 @@ const client = new Client({
         GatewayIntentBits.GuildMembers,
         GatewayIntentBits.GuildPresences,
         GatewayIntentBits.MessageContent,
-
+        GatewayIntentBits.GuildVoiceStates
     ],
 })
 client.once('ready', () => console.log('Ready!'))

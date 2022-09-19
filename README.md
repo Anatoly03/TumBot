@@ -4,4 +4,5 @@
     - `ADMIN_CHANNEL_ID = `
     - `RULES_WEBHOOK_ID = `
     - `RULES_WEBHOOK_TOKEN =`
+    - `GENERAL_VOICE_CATEGORY = ` Used for the *scalable* voice channels category.
 - `npm run start` to initiate process
