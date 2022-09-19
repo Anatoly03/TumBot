@@ -58,14 +58,14 @@ async function init(client) {
     const channel = await guild.channels.fetch(process.env.ADMIN_CHANNEL_ID)
     if (!channel) return
 
-    dm_link['366491882769088512'] = {
+    /*dm_link['366491882769088512'] = {
         type: 'verify',
         verification: {
             state: 0,
             lang: null,
             TUM_ID: null,
         },
-    }
+    }*/
 
     const test_user = await guild.members.fetch('366491882769088512')
     askForLanguage(test_user)
