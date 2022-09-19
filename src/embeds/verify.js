@@ -38,19 +38,21 @@ export default {
         .setTitle('(Studentenorganisierter) TUM Discord ○ Verifikation')
         .setColor(0x3489eb)
         .setDescription(
-            'Eine Email wurde auf Ihren TUM-Account geschickt. Bitte drücken Sie den Verifikations-Code dort an.\n\n' +
-            'ab12cde@mytum.de'
+            `Eine Email wurde an Ihre TUM-Email geschickt. Bitte schreiben Sie den dort angegebenen code hier rein.
+            [TUM-Email Anleitung](https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/pl/ui/$ctx/help.file_help?$ctx=design=ca2;header=max;lang=de&app_kb=BM&corg=&seite_nr=500231&sprache_nr=1 'TUM-Email Anleitung')
+            Email verschickt an: `
         ),
     email_en: new EmbedBuilder()
         .setTitle('(Student-run) TUM Discord ○ Verification')
         .setColor(0x3489eb)
         .setDescription(
-            'An email has been sent to your TUM-account. Please press the link attached in the email to verify your account.\n\n' +
-            'ab12cde@mytum.de'
+            `'An email has been sent to your TUM-account. Please send the code contained within into this channel.
+            [TUM-Email Guide](https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/pl/ui/$ctx/help.file_help?$ctx=design=ca2;header=max;lang=de&app_kb=BM&corg=&seite_nr=500231&sprache_nr=1 'How to access your TUM-Email')
+            Email sent to: `
         ),
 
     /*
-     * Forth Embed says that the verification process was successful
+     * Verification process was successful message
      */
     verified_de: new EmbedBuilder()
         .setTitle('Herzlich Willkommen!')
