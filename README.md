@@ -6,5 +6,5 @@
     - `RULES_WEBHOOK_TOKEN =`
     - `GENERAL_VOICE_CATEGORY = ` Used for the *scalable* voice channels category.
     - `EMAIL_USER =` Used for verification email account
-    - `EMAIL_PASSWORD =` Used for verification email account
+    - `EMAIL_PASSWORD =` The [App Password](https://stackoverflow.com/questions/45478293/username-and-password-not-accepted-when-using-nodemailer)
 - `npm run start` to initiate process

@@ -35,13 +35,6 @@ const transporter = nodemailer.createTransport({
     },
 })
 
-const mailOptions = {
-    from: process.env.EMAIL_USER,
-    //to: 'to-address',
-    subject: 'Discord Verifizierungs Code',
-    //text: 'Message Content',
-}
-
 /**
  * @param {GuildMember} member
  */
@@ -145,7 +138,21 @@ async function askForTumID(user) {
  * @description STEP 3: SEND VERIFICATION CODE PER EMAIL
  */
 async function sendVerifyEmail(user, tum_id) {
-    console.log('email', tum_id)
+    transporter.sendMail(
+        {
+            from: process.env.EMAIL_USER,
+            to: tum_id,
+            subject: 'TUM Discord Verifizierungs Code',
+            text: 'Ihr Code ist: ABC',
+        },
+        function (error, info) {
+            if (error) {
+                console.log(error)
+            } else {
+                console.log('Email sent: ' + info.response)
+            }
+        }
+    )
 }
 
 /**
