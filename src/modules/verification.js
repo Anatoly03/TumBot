@@ -18,16 +18,16 @@ import { randomBytes } from 'node:crypto'
 const time = 520000
 
 const lang_embeds = {
-    de: [
-        VERIFY_EMBED.default.id_ask_de,
-        VERIFY_EMBED.default.email_de,
-        VERIFY_EMBED.default.verified_de,
-    ],
-    en: [
-        VERIFY_EMBED.default.id_ask_en,
-        VERIFY_EMBED.default.email_en,
-        VERIFY_EMBED.default.verified_en,
-    ],
+    de: {
+        id_ask: VERIFY_EMBED.default.id_ask_de,
+        email: VERIFY_EMBED.default.email_de,
+        verified: VERIFY_EMBED.default.verified_de,
+    },
+    en: {
+        id_ask: VERIFY_EMBED.default.id_ask_en,
+        email: VERIFY_EMBED.default.email_en,
+        verified: VERIFY_EMBED.default.verified_en,
+    },
 }
 
 const transporter = nodemailer.createTransport({
@@ -101,7 +101,7 @@ async function askForLanguage(member) {
     collector.on('collect', async (interaction) => {
         dm_link[interaction.user.id].verification.lang = interaction.customId
         dm_link[interaction.user.id].verification.state = 1 // 1: enter tum code
-        const embed = lang_embeds[interaction.customId][0]
+        const embed = lang_embeds[interaction.customId].id_ask
 
         interaction.reply({
             embeds: [embed],
@@ -123,9 +123,17 @@ async function askForTumID(user) {
     })
 
     collector.on('collect', async (message) => {
-        dm_link[user.id].verification.TUM_ID = message.content
+        //find TUM IDs in message with regex
+        const idRegex = /[[:alpha:]]{2}[0-9]{2}[[:alpha:]]{3}/;
+        let matches = m.content.match(idRegex);
+        if (matches.length != 1) {
+            // dmChannel.send("Please send your TUM ID exactly once. It should look something like the following: ab12cde");
+            return;
+        }
+
+        dm_link[user.id].verification.TUM_ID = matches[0];
         dm_link[user.id].verification.state = 2 // 2: await verification
-        const embed = lang_embeds[dm_link[user.id].verification.lang][1]
+        const embed = lang_embeds[dm_link[user.id].verification.lang].email
 
         user.send({
             embeds: [embed],
@@ -177,7 +185,7 @@ async function sendVerifyEmail(user, tum_id) {
 
     collector.on('collect', async (message) => {
         const guild = await message.client.guilds.fetch(process.env.GUILD_ID)
-        const embed = lang_embeds[dm_link[user.id].verification.lang][2]
+        const embed = lang_embeds[dm_link[user.id].verification.lang].verified
 
         user.send({
             embeds: [embed],
