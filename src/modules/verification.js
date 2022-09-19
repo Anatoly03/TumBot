@@ -49,8 +49,7 @@ const transporter = nodemailer.createTransport({
 async function guildeMemberAdd(member) {
     console.log(member.user.tag, 'joined!')
 
-    const guild = await client.guilds.fetch(process.env.GUILD_ID)
-    const channel = await guild.channels.fetch(process.env.ADMIN_CHANNEL_ID)
+    const channel = await member.guild.channels.fetch(process.env.ADMIN_CHANNEL_ID)
     if (!channel) return
 
     dm_link[member.user.id] = {
@@ -62,7 +61,7 @@ async function guildeMemberAdd(member) {
         },
     }
 
-    const test_user = await guild.members.fetch(member.user.id)
+    const test_user = await member.guild.members.fetch(member.user.id)
     askForLanguage(test_user)
 }
 
