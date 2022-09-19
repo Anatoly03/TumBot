@@ -7,6 +7,8 @@ import {
     ActionRowBuilder,
     ButtonBuilder,
     ButtonStyle,
+    DMChannel,
+    User,
 } from 'discord.js'
 import nodemailer from 'nodemailer'
 import { links as dm_link } from './modmail.js'
@@ -65,14 +67,17 @@ async function init(client) {
     }
 
     const test_user = await guild.members.fetch('366491882769088512')
-    initiate_verification(test_user)
+    askForLanguage(test_user)
 }
 
 /**
  * @param {GuildMember} member
- * @description STEP 1: CHOSE LANGUAGE
+ * @description Verify user by guiding through steps
  */
-async function initiate_verification(member) {
+async function askForLanguage(member) {
+    /*
+     * STEP 1: LANGUAGE SELECTION
+     */
     let message = await member.send({
         embeds: [VERIFY_EMBED.default.lang_ask],
     })
@@ -88,29 +93,59 @@ async function initiate_verification(member) {
             .setStyle(ButtonStyle.Secondary)
     )
 
-    message.edit({
+    await message.edit({
         components: [row],
+    })
+
+    const collector = await message.createMessageComponentCollector(
+        () => true,
+        { time: 120000 }
+    )
+
+    collector.on('collect', async (interaction) => {
+        dm_link[interaction.user.id].verification.lang = interaction.customId
+        dm_link[interaction.user.id].verification.state = 1 // 1: enter tum code
+        const embed = lang_embeds[interaction.customId][0]
+
+        interaction.reply({
+            embeds: [embed],
+        })
+
+        await collector.stop()
+        askForTumID(interaction.user)
     })
 }
 
 /**
- * @param {import('discord.js').Interaction} interaction
- * @description STEP 2: ENTER TUM CODE
+ * @param {User} user
+ * @description STEP 2: ENTER TUM ID
  */
-async function languageCheck(interaction) {
-    if (!interaction.isButton()) return
-    if (interaction.channel.type != ChannelType.DM) return
-    if (dm_link[interaction.user.id].type != 'verify') return
-
-    dm_link[interaction.user.id].verification.lang = interaction.customId
-    dm_link[interaction.user.id].verification.state = 1 // 1: enter tum code
-    const embed = lang_embeds[interaction.customId][0]
-
-    //console.log(embed)
-
-    interaction.reply({
-        embeds: [embed]
+async function askForTumID(user) {
+    const collector = await user.dmChannel.createMessageCollector({
+        filter: (m) => !m.author.bot,
+        time: 15000,
     })
+
+    collector.on('collect', async (message) => {
+        dm_link[user.id].verification.TUM_ID = message.content
+        dm_link[user.id].verification.state = 2 // 2: await verification
+        const embed = lang_embeds[dm_link[user.id].verification.lang][1]
+
+        user.send({
+            embeds: [embed],
+        })
+
+        await collector.stop()
+        sendVerifyEmail(user, dm_link[user.id].verification.TUM_ID)
+    })
+}
+
+/**
+ * @param {User} user
+ * @description STEP 3: SEND VERIFICATION CODE PER EMAIL
+ */
+async function sendVerifyEmail(user, tum_id) {
+    console.log('email', tum_id)
 }
 
 /**
@@ -126,10 +161,5 @@ export default [
         type: 'event',
         name: 'guildMemberAdd',
         run: guildeMemberAdd,
-    },
-    {
-        type: 'event',
-        name: 'interactionCreate',
-        run: languageCheck,
     },
 ]
