@@ -56,6 +56,7 @@ async function recalculate(client) {
             name: 'VC',
             type: ChannelType.GuildVoice,
         })
+        voice_channels[vc.id] = []
         vc.setParent(process.env.GENERAL_VOICE_CATEGORY)
     }
 
@@ -67,6 +68,13 @@ async function recalculate(client) {
             vc.delete()
         }
     }
+
+    let i = 1
+    Object.keys(voice_channels).forEach(async (channel_id) => {
+        let vc = await guild.channels.fetch(channel_id)
+        vc.setName('VC ' + i)
+        i += 1
+    })
 }
 
 /**
