@@ -131,7 +131,8 @@ async function askForTumID(user) {
 
         dm_link[user.id].verification.TUM_ID = matches[0];
         dm_link[user.id].verification.state = 2 // 2: await verification
-        const embed = lang_embeds[dm_link[user.id].verification.lang].email
+        let embed = lang_embeds[dm_link[user.id].verification.lang].email
+        embed.description += `${dm_link[user.id].verification.TUM_ID}@mytum.de`
 
         user.send({
             embeds: [embed],
