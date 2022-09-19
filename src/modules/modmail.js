@@ -8,7 +8,7 @@ import {
 } from 'discord.js'
 
 /**
- * @type {{ [keys: string] : {type : 'mail' | 'verify', thread?: number | verification?: any }}}
+ * @type {{ [keys: string] : {type : 'mail' | 'verify', thread?: number, verification?: any }}}
  * @description Links user ids to thread ids.
  *
  * ```
