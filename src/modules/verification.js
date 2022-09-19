@@ -13,6 +13,7 @@ import {
 import nodemailer from 'nodemailer'
 import { links as dm_link } from './modmail.js'
 import * as VERIFY_EMBED from '../embeds/verify.js'
+import { randomBytes } from 'node:crypto'
 
 const lang_embeds = {
     de: [
@@ -138,21 +139,58 @@ async function askForTumID(user) {
  * @description STEP 3: SEND VERIFICATION CODE PER EMAIL
  */
 async function sendVerifyEmail(user, tum_id) {
-    transporter.sendMail(
-        {
-            from: process.env.EMAIL_USER,
-            to: tum_id,
-            subject: 'TUM Discord Verifizierungs Code',
-            text: 'Ihr Code ist: ABC',
-        },
-        function (error, info) {
-            if (error) {
-                console.log(error)
-            } else {
-                console.log('Email sent: ' + info.response)
-            }
-        }
-    )
+    let hash = randomBytes(20).toString('hex')
+    console.log(hash)
+
+    /*try {
+        await new Promise((res, err) =>
+            transporter.sendMail(
+                {
+                    from: process.env.EMAIL_USER,
+                    to: tum_id,
+                    subject: 'TUM Discord Verifizierungs Code',
+                    text: 'Ihr Code ist: ' + hash,
+                },
+                function (error, info) {
+                    if (error) {
+                        err(error)
+                    } else {
+                        res()
+                        //console.log('Email sent: ' + info.response)
+                    }
+                }
+            )
+        )
+    } catch (e) {
+        // error
+        return
+    }*/
+
+    // success
+
+    const collector = await user.dmChannel.createMessageCollector({
+        filter: (m) => !m.author.bot,
+        time: 15000,
+    })
+
+    collector.on('collect', async (message) => {
+        const guild = await message.client.guilds.fetch(process.env.GUILD_ID)
+        const embed = lang_embeds[dm_link[user.id].verification.lang][2]
+
+        user.send({
+            embeds: [embed],
+        })
+
+        delete dm_link[user.id]
+
+        let guild_member = await guild.members.fetch(user.id)
+        let verify_role = await guild.roles.fetch(process.env.VERIFIED_ROLE)
+        guild_member.roles.add(verify_role)
+
+        await collector.stop()
+        console.log(message.content)
+
+    })
 }
 
 /**
