@@ -125,7 +125,7 @@ async function askForTumID(user) {
         const idRegex = /[[:alpha:]]{2}[0-9]{2}[[:alpha:]]{3}/;
         let matches = m.content.match(idRegex);
         if (matches.length != 1) {
-            dmChannel.send("Please send your TUM ID exactly once. It should look something like the following: ab12cde");
+            // dmChannel.send("Please send your TUM ID exactly once. It should look something like the following: ab12cde");
             return;
         }
 
