@@ -14,8 +14,9 @@ import nodemailer from 'nodemailer'
 import { links as dm_link } from './modmail.js'
 import * as VERIFY_EMBED from '../embeds/verify.js'
 import { randomBytes } from 'node:crypto'
+import { assert } from 'node:console'
 
-const time = 520000
+const time = 60 * 60 * 1000
 
 const lang_embeds = {
     de: {
@@ -99,7 +100,7 @@ async function askForLanguage(member) {
 
     const collector = await message.createMessageComponentCollector(
         () => true,
-        { time: 120000 }
+        { time }
     )
 
     collector.on('collect', async (interaction) => {
@@ -130,7 +131,8 @@ async function askForTumID(user) {
         // Find TUM ID in message
         const idRegex = /[a-z]{2}[0-9]{2}[a-z]{3}/i
         if (!idRegex.test(message.content)) {
-            const embed = lang_embeds[dm_link[user.id].verification.lang].error_id
+            const embed =
+                lang_embeds[dm_link[user.id].verification.lang].error_id
             user.send({
                 embeds: [embed],
             })
@@ -142,14 +144,17 @@ async function askForTumID(user) {
         dm_link[user.id].verification.TUM_ID = message.content
         dm_link[user.id].verification.state = 2 // 2: await verification
         let embed = lang_embeds[dm_link[user.id].verification.lang].email
-        embed.description += `${dm_link[user.id].verification.TUM_ID}@mytum.de`
-
-        user.send({
-            embeds: [embed],
-        })
+        embed.data.description += `${
+            dm_link[user.id].verification.TUM_ID
+        }@mytum.de`
 
         await collector.stop()
-        sendVerifyEmail(user, dm_link[user.id].verification.TUM_ID)
+        let status = await sendVerifyEmail(user, dm_link[user.id].verification.TUM_ID)
+        if (status == 1) {
+            user.send({
+                embeds: [embed],
+            })
+        }
     })
 }
 
@@ -161,31 +166,38 @@ async function sendVerifyEmail(user, tum_id) {
     let hash = randomBytes(20).toString('hex')
     console.log(hash)
 
-    /*try {
-        await new Promise((res, err) =>
-            transporter.sendMail(
-                {
-                    from: process.env.EMAIL_USER,
-                    to: tum_id,
-                    subject: 'TUM Discord Verifizierungs Code',
-                    text: 'Ihr Code ist: ' + hash,
-                },
-                function (error, info) {
-                    if (error) {
-                        err(error)
-                    } else {
-                        res()
-                        //console.log('Email sent: ' + info.response)
-                    }
+    try {
+        //let promise = new Promise((res, err) => {
+        transporter.sendMail(
+            {
+                from: process.env.EMAIL_USER,
+                to: tum_id + '@mytum.de',
+                subject: 'TUM Discord Verifizierungs Code',
+                text: 'Ihr Code ist: ' + hash,
+            },
+            function (error, info) {
+                if (error) {
+                    err(error)
+                } else {
+                    res()
+                    console.log('Email sent: ' + info.response)
                 }
-            )
+            }
         )
-    } catch (e) {
-        // error
-        return
-    }*/
+        //})
 
-    // success
+        //await promise
+    } catch (e) {
+        const embed = lang_embeds[dm_link[user.id].verification.lang].error_id
+        user.send({
+            embeds: [embed],
+        })
+        askForTumID(user)
+        console.log(e)
+        return 0
+    }
+
+    console.log('success')
 
     const collector = await user.dmChannel.createMessageCollector({
         filter: (m) => !m.author.bot,
@@ -219,6 +231,8 @@ async function sendVerifyEmail(user, tum_id) {
         await collector.stop()
         console.log(message.content)
     })
+
+    return 1
 }
 
 /**
