@@ -121,7 +121,15 @@ async function askForTumID(user) {
     })
 
     collector.on('collect', async (message) => {
-        dm_link[user.id].verification.TUM_ID = message.content
+        //find TUM IDs in message with regex
+        const idRegex = /[[:alpha:]]{2}[0-9]{2}[[:alpha:]]{3}/;
+        let matches = m.content.match(idRegex);
+        if (matches.length != 1) {
+            dmChannel.send("Please send your TUM ID exactly once. It should look something like the following: ab12cde");
+            return;
+        }
+
+        dm_link[user.id].verification.TUM_ID = matches[0];
         dm_link[user.id].verification.state = 2 // 2: await verification
         const embed = lang_embeds[dm_link[user.id].verification.lang][1]
 
