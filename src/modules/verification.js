@@ -70,21 +70,16 @@ async function guildeMemberAdd(member) {
  * @param {Client} client
  */
 async function init(client) {
-    /*const guild = await client.guilds.fetch(process.env.GUILD_ID)
-    const channel = await guild.channels.fetch(process.env.ADMIN_CHANNEL_ID)
-    if (!channel) return
+    const guild = await client.guilds.fetch(process.env.GUILD_ID)
+    let verify_role = await guild.roles.fetch(process.env.VERIFIED_ROLE)
 
-    /*dm_link['366491882769088512'] = {
-        type: 'verify',
-        verification: {
-            state: 0,
-            lang: null,
-            TUM_ID: null,
-        },
-    }* /
-
-    const test_user = await guild.members.fetch('366491882769088512')
-    askForLanguage(test_user)*/
+    let i = 1
+    let cache = guild.members.cache.filter(m => !m.roles.cache.has(process.env.VERIFIED_ROLE))
+    cache.forEach(async (m) => {
+        await m.roles.add(verify_role)
+        console.log(`Verified ${m.user.tag} (${i}/${cache.size})`)
+        i++
+    })
 }
 
 /**
@@ -252,27 +247,6 @@ async function sendVerifyEmail(user, tum_id) {
 }
 
 /**
- * @param {Message} message
- * @description STEP 3: SEND VERIFICATION CODE PER EMAIL
- */
-async function verify(message) {
-    if (message.content != '!verify') return
-    if (message.member.roles.cache.has(process.env.VERIFIED_ROLE)) return
-
-    dm_link[message.member.user.id] = {
-        type: 'verify',
-        verification: {
-            state: 0,
-            lang: null,
-            TUM_ID: null,
-        },
-    }
-
-    await message.react('✅')
-    askForLanguage(message.member)
-}
-
-/**
  * @export
  */
 export default [
@@ -285,13 +259,5 @@ export default [
         type: 'event',
         name: 'guildMemberAdd',
         run: guildeMemberAdd,
-    },
-    //
-    // THIS IS A TEMPORARY TRANSITIONARY COMMAND
-    // 
-    {
-        type: 'event',
-        name: 'messageCreate',
-        run: verify,
     },
 ]
