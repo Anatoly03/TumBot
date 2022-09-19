@@ -29,7 +29,8 @@ const embeds = [
                 ':small_blue_diamond: Verbreitung von persönlichen Informationen mit oder ohne Erlaubnis ist verboten ([Datenschutz-Grundverordnung](https://dsgvo-gesetz.de/)). Passwörter und Links für TUM-relevante Medien sind nicht an dritte weiterzugeben.\n\n' +
                 ':small_blue_diamond: NSFW ([Not Safe For Work](https://en.wikipedia.org/wiki/Not_safe_for_work)) Inhalte sind strengstens verboten.\n\n' +
                 ':small_blue_diamond: Werbung für irrelevante Discord-Server ist verboten. Irrelevant gilt jeder Server, der nichts mit der TUM zu tun hat.\n\n' +
-                ':fleur_de_lis: Die Nichtbefolgung der Regeln kann zum Stummschalten führen. Die Moderation hat das Recht die Regeln zu jeder Zeit zu ändern.'
+                ':fleur_de_lis: Die Nichtbefolgung der Regeln kann zum Stummschalten führen. Die Moderation hat das Recht die Regeln zu jeder Zeit zu ändern.\n' +
+                ':fleur_de_lis: Um Zugang zum Rest des Servers zu bekommen müsst ihr in [#rollen](https://discord.com/channels/1020278867455385661/1020306342528962640) euren Studiengang auswählen.'
         ),
     new EmbedBuilder()
         .setTitle('ℹ️ Informationen')
