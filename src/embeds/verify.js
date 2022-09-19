@@ -50,7 +50,7 @@ export default {
         ),
 
     /*
-     * Third Embed says that an email has been sent.
+     * Forth Embed says that the verification process was successful
      */
     verified_de: new EmbedBuilder()
         .setTitle('Herzlich Willkommen!')
@@ -90,4 +90,36 @@ export default {
                 value: 'Have fun!',
             },
         ]),
+
+    /*
+     * This embed follows the second if the the TUM Id is invalid.
+     */
+    error_id_de: new EmbedBuilder()
+        .setTitle('Ungültige TUM Id!')
+        .setColor(0xf27950)
+        .setDescription(
+            'Die Id, die Sie angegeben haben ist keine gültige TUM Id, bitte versuchen Sie es nochmal.'
+        ),
+    error_id_en: new EmbedBuilder()
+        .setTitle('Invalid TUM Id!')
+        .setColor(0xf27950)
+        .setDescription(
+            'The TUM Id you specified is invalid. Please try again.'
+        ),
+
+    /*
+     * This embed follows the third if the the verification hash is invalid.
+     */
+    error_has_de: new EmbedBuilder()
+        .setTitle('Ungültiger Hash!')
+        .setColor(0xf27950)
+        .setDescription(
+            'Bitte geben Sie den Hash ein, den Sie in der email gekriegt haben.'
+        ),
+    error_hash_en: new EmbedBuilder()
+        .setTitle('Invalid hash!')
+        .setColor(0xf27950)
+        .setDescription(
+            'Please provide the hash which you received in your email.'
+        ),
 }
