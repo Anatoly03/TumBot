@@ -195,6 +195,16 @@ async function sendVerifyEmail(user, tum_id) {
         const guild = await message.client.guilds.fetch(process.env.GUILD_ID)
         const embed = lang_embeds[dm_link[user.id].verification.lang].verified
 
+        if (hash != message.content) {
+            /*const embed = lang_embeds[dm_link[user.id].verification.lang].error_hash
+            user.send({
+                embeds: [embed],
+            })
+            await collector.stop()
+            sendVerifyEmail(user, tum_id)*/
+            return
+        }
+
         user.send({
             embeds: [embed],
         })
