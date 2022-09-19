@@ -15,6 +15,8 @@ import { links as dm_link } from './modmail.js'
 import * as VERIFY_EMBED from '../embeds/verify.js'
 import { randomBytes } from 'node:crypto'
 
+const time = 520000
+
 const lang_embeds = {
     de: {
         id_ask: VERIFY_EMBED.default.id_ask_de,
@@ -117,7 +119,7 @@ async function askForLanguage(member) {
 async function askForTumID(user) {
     const collector = await user.dmChannel.createMessageCollector({
         filter: (m) => !m.author.bot,
-        // time: 15000,
+        time,
     })
 
     collector.on('collect', async (message) => {
@@ -179,7 +181,7 @@ async function sendVerifyEmail(user, tum_id) {
 
     const collector = await user.dmChannel.createMessageCollector({
         filter: (m) => !m.author.bot,
-        time: 15000,
+        time,
     })
 
     collector.on('collect', async (message) => {
