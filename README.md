@@ -5,4 +5,6 @@
     - `RULES_WEBHOOK_ID = `
     - `RULES_WEBHOOK_TOKEN =`
     - `GENERAL_VOICE_CATEGORY = ` Used for the *scalable* voice channels category.
+    - `EMAIL_USER =` Used for verification email account
+    - `EMAIL_PASSWORD =` Used for verification email account
 - `npm run start` to initiate process
