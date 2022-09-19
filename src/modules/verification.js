@@ -9,12 +9,12 @@ import {
     ButtonStyle,
     DMChannel,
     User,
+    Message,
 } from 'discord.js'
 import nodemailer from 'nodemailer'
 import { links as dm_link } from './modmail.js'
 import * as VERIFY_EMBED from '../embeds/verify.js'
 import { randomBytes } from 'node:crypto'
-import { assert } from 'node:console'
 
 const time = 60 * 60 * 1000
 
@@ -48,13 +48,29 @@ const transporter = nodemailer.createTransport({
  */
 async function guildeMemberAdd(member) {
     console.log(member.user.tag, 'joined!')
+
+    const guild = await client.guilds.fetch(process.env.GUILD_ID)
+    const channel = await guild.channels.fetch(process.env.ADMIN_CHANNEL_ID)
+    if (!channel) return
+
+    dm_link[member.user.id] = {
+        type: 'verify',
+        verification: {
+            state: 0,
+            lang: null,
+            TUM_ID: null,
+        },
+    }
+
+    const test_user = await guild.members.fetch(member.user.id)
+    askForLanguage(test_user)
 }
 
 /**
  * @param {Client} client
  */
 async function init(client) {
-    const guild = await client.guilds.fetch(process.env.GUILD_ID)
+    /*const guild = await client.guilds.fetch(process.env.GUILD_ID)
     const channel = await guild.channels.fetch(process.env.ADMIN_CHANNEL_ID)
     if (!channel) return
 
@@ -65,10 +81,10 @@ async function init(client) {
             lang: null,
             TUM_ID: null,
         },
-    }*/
+    }* /
 
     const test_user = await guild.members.fetch('366491882769088512')
-    askForLanguage(test_user)
+    askForLanguage(test_user)*/
 }
 
 /**
@@ -149,7 +165,10 @@ async function askForTumID(user) {
         }@mytum.de`
 
         await collector.stop()
-        let status = await sendVerifyEmail(user, dm_link[user.id].verification.TUM_ID)
+        let status = await sendVerifyEmail(
+            user,
+            dm_link[user.id].verification.TUM_ID
+        )
         if (status == 1) {
             user.send({
                 embeds: [embed],
@@ -164,7 +183,7 @@ async function askForTumID(user) {
  */
 async function sendVerifyEmail(user, tum_id) {
     let hash = randomBytes(20).toString('hex')
-    console.log(hash)
+    //console.log(hash)
 
     try {
         //let promise = new Promise((res, err) => {
@@ -180,7 +199,7 @@ async function sendVerifyEmail(user, tum_id) {
                     err(error)
                 } else {
                     res()
-                    console.log('Email sent: ' + info.response)
+                    //console.log('Email sent: ' + info.response)
                 }
             }
         )
@@ -193,11 +212,9 @@ async function sendVerifyEmail(user, tum_id) {
             embeds: [embed],
         })
         askForTumID(user)
-        console.log(e)
+        //console.log(e)
         return 0
     }
-
-    console.log('success')
 
     const collector = await user.dmChannel.createMessageCollector({
         filter: (m) => !m.author.bot,
@@ -229,10 +246,30 @@ async function sendVerifyEmail(user, tum_id) {
         guild_member.roles.add(verify_role)
 
         await collector.stop()
-        console.log(message.content)
     })
 
     return 1
+}
+
+/**
+ * @param {Message} message
+ * @description STEP 3: SEND VERIFICATION CODE PER EMAIL
+ */
+async function verify(message) {
+    if (message.content != '!verify') return
+    if (message.member.roles.cache.has(process.env.VERIFIED_ROLE)) return
+
+    dm_link[message.member.user.id] = {
+        type: 'verify',
+        verification: {
+            state: 0,
+            lang: null,
+            TUM_ID: null,
+        },
+    }
+
+    await message.react('✅')
+    askForLanguage(message.member)
 }
 
 /**
@@ -248,5 +285,13 @@ export default [
         type: 'event',
         name: 'guildMemberAdd',
         run: guildeMemberAdd,
+    },
+    //
+    // THIS IS A TEMPORARY TRANSITIONARY COMMAND
+    // 
+    {
+        type: 'event',
+        name: 'messageCreate',
+        run: verify,
     },
 ]
