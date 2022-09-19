@@ -52,7 +52,7 @@ export default {
         ),
 
     /*
-     * Forth Embed says that the verification process was successful
+     * Verification process was successful message
      */
     verified_de: new EmbedBuilder()
         .setTitle('Herzlich Willkommen!')
