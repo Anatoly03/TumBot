@@ -117,7 +117,7 @@ async function askForLanguage(member) {
 async function askForTumID(user) {
     const collector = await user.dmChannel.createMessageCollector({
         filter: (m) => !m.author.bot,
-        time: 15000,
+        // time: 15000,
     })
 
     collector.on('collect', async (message) => {
