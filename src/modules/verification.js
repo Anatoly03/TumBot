@@ -71,14 +71,20 @@ async function guildeMemberAdd(member) {
  */
 async function init(client) {
     const guild = await client.guilds.fetch(process.env.GUILD_ID)
-    let verify_role = await guild.roles.fetch(process.env.VERIFIED_ROLE)
+    let cache = guild.members.cache.filter(
+        (m) => !m.roles.cache.has(process.env.VERIFIED_ROLE)
+    )
+    cache.forEach(async (member) => {
+        dm_link[member.user.id] = {
+            type: 'verify',
+            verification: {
+                state: 0,
+                lang: null,
+                TUM_ID: null,
+            },
+        }
 
-    let i = 1
-    let cache = guild.members.cache.filter(m => !m.roles.cache.has(process.env.VERIFIED_ROLE))
-    cache.forEach(async (m) => {
-        await m.roles.add(verify_role)
-        console.log(`Verified ${m.user.tag} (${i}/${cache.size})`)
-        i++
+        askForLanguage(member)
     })
 }
 
