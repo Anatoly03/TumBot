@@ -167,9 +167,12 @@ async function askForTumID(user) {
         dm_link[user.id].verification.TUM_ID = message.content
         dm_link[user.id].verification.state = 2 // 2: await verification
         let embed = lang_embeds[dm_link[user.id].verification.lang].email
-        embed.data.description += `${
-            dm_link[user.id].verification.TUM_ID
-        }@mytum.de`
+
+        if(embed.data.description.endsWith("@mytum.de")){
+            embed.data.description = embed.data.description.slice(0, embed.data.description.length-"ab12cde@mytum.de".length)
+        }
+
+        embed.data.description += `${dm_link[user.id].verification.TUM_ID}@mytum.de`;
 
         await collector.stop()
         let status = await sendVerifyEmail(
