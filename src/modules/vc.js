@@ -8,7 +8,7 @@ import { CategoryChannel, ChannelType, Client, VoiceState } from 'discord.js'
  * voice_channels["channel_id"] = [member id's, ...]
  * ```
  */
-let voice_channels = {}
+let voice_channels = {};
 
 /**
  * @param {Client} client
@@ -23,7 +23,7 @@ async function init(client) {
  * @description If a user joins or leaves a voice channel.
  */
 async function voiceStateUpdate(oldState, newState) {
-    recalculate(newState.client)
+    recalculate(newState.client);
 }
 
 /**
@@ -34,20 +34,27 @@ async function voiceStateUpdate(oldState, newState) {
  */
 async function recalculate(client) {
     const guild = await client.guilds.fetch(process.env.GUILD_ID)
+        .catch(e => {
+            console.log("Error vc.js: Invalid environment GUILD_ID (fetch failed)");
+            throw e;
+        });
+
     const category_channel = await guild.channels.fetch(
         process.env.GENERAL_VOICE_CATEGORY
-    )
-    if (category_channel.type != ChannelType.GuildCategory)
-        return console.log('Error vc.js: General VC Category Id is no Category')
+    ).catch(e => {
+        console.log('Error vc.js: General VC Category Id is invalid (fetch failed)');
+        throw e;
+    });
+
     category_channel.children.cache.forEach((vc) => {
-        voice_channels[vc.id] = vc.members.map(m => m.id)
+        voice_channels[vc.id] = vc.members.map(m => m.id);
         //console.log(vc.id,vc.members.map((m) => m.id))
     })
 
-    let empty = []
+    let empty = [];
 
     Object.keys(voice_channels).forEach(channel_id => {
-        if (voice_channels[channel_id].length == 0) empty.push(channel_id)
+        if (voice_channels[channel_id].length == 0) empty.push(channel_id);
     })
 
     // There are no empty voice channels.
@@ -55,25 +62,36 @@ async function recalculate(client) {
         let vc = await guild.channels.create({
             name: 'VC',
             type: ChannelType.GuildVoice,
+        }).catch(e => {
+            console.log('Error vc.js: Failed to create new voice channel');
+            throw e;
         })
-        voice_channels[vc.id] = []
-        vc.setParent(process.env.GENERAL_VOICE_CATEGORY)
+        voice_channels[vc.id] = [];
+        vc.setParent(process.env.GENERAL_VOICE_CATEGORY);
     }
 
     // There are two or more channels empty.
     else if (empty.length > 1) {
         for (let i = 0; i < empty.length - 1; i++) {
             let vc = await guild.channels.fetch(empty[i])
-            delete voice_channels[vc.id]
-            vc.delete()
+                .catch(e => {
+                    console.log(`Error vc.js: Failed to fetch empty channel with id ${empty[i]}`);
+                    throw e;
+                });
+            vc.delete();
+            delete voice_channels[vc.id];
         }
     }
 
     let i = 1
     Object.keys(voice_channels).forEach(async (channel_id) => {
         let vc = await guild.channels.fetch(channel_id)
-        vc.setName('VC ' + i)
-        i += 1
+            .catch(e => {
+                console.log(`Error vc.js: Failed to fetch channel with id ${channel_id}`);
+                throw e;
+            });
+        vc.setName('VC ' + i);
+        i += 1;
     })
 }
 
