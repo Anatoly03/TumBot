@@ -26,7 +26,7 @@ export default [
         .setTitle('ℹ️ Wie verifiziere ich mich?')
         .setColor(0x7bcc76)
         .setDescription(
-            `🇩🇪 Um sich zu verifizieren und Zugang zum Server zu kriegen bitten wir Sie den Instruktion von <@1020349732746436728> zu folgen.
+            `🇩🇪 Um sich zu verifizieren und Zugang zum Server zu kriegen bitten wir Sie den Instruktionen von <@1020349732746436728> zu folgen.
             Bei Problemen können Sie in <#1021690009759256606> mit dem Admin-Team in Kontakt treten.
             
             🇬🇧 To verify and gain access to the server, please follow the instructions provided by <@1020349732746436728>.
