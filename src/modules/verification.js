@@ -55,23 +55,7 @@ const transporter = nodemailer.createTransport({
  */
 async function guildeMemberAdd(member) {
     console.log(member.user.tag, 'joined!')
-
-    const channel = await member.guild.channels.fetch(
-        process.env.ADMIN_CHANNEL_ID
-    )
-    if (!channel) return
-
-    dm_link[member.user.id] = {
-        type: 'verify',
-        verification: {
-            state: 0,
-            lang: null,
-            TUM_ID: null,
-        },
-    }
-
-    const test_user = await member.guild.members.fetch(member.user.id)
-    askForLanguage(test_user)
+    askForLanguage(member)
 }
 
 /**
