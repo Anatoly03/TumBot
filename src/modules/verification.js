@@ -71,7 +71,7 @@ async function guildeMemberAdd(member) {
  * @param {GuildMember} member
  * @description Verify user by guiding through steps
  */
-async function askForLanguage(member) {
+export async function askForLanguage(member) {
     dm_link[member.user.id] = {
         type: 'verify',
         verification: {
@@ -144,7 +144,7 @@ async function awaitLanguageOption(interaction) {
  * @param {User} user
  * @description STEP 2: ENTER TUM ID
  */
-export async function askForTumID(user) {
+async function askForTumID(user) {
     const collector = await user.dmChannel.createMessageCollector({
         filter: (m) => !m.author.bot,
         time,
