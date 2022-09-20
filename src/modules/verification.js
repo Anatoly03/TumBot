@@ -218,9 +218,9 @@ async function sendVerifyEmail(user, tum_id) {
         user.send({
             embeds: [embed],
         })
-        askForTumID(user)
+        askForTumID(user);
         //console.log(e)
-        return 0
+        return 0;
     }
 
     const collector = await user.dmChannel.createMessageCollector({
@@ -229,8 +229,8 @@ async function sendVerifyEmail(user, tum_id) {
     })
 
     collector.on('collect', async (message) => {
-        const guild = await message.client.guilds.fetch(process.env.GUILD_ID)
-        const embed = lang_embeds[dm_link[user.id].verification.lang].verified
+        const guild = await message.client.guilds.fetch(process.env.GUILD_ID);
+        const embed = lang_embeds[dm_link[user.id].verification.lang].verified;
 
         if (hash != message.content) {
             /*const embed = lang_embeds[dm_link[user.id].verification.lang].error_hash
@@ -239,18 +239,20 @@ async function sendVerifyEmail(user, tum_id) {
             })
             await collector.stop()
             sendVerifyEmail(user, tum_id)*/
-            return 0
+            return 0;
         }
 
         user.send({
             embeds: [embed],
-        })
+        });
 
-        delete dm_link[user.id]
+        delete dm_link[user.id];
 
-        let guild_member = await guild.members.fetch(user.id)
-        let verify_role = await guild.roles.fetch(process.env.VERIFIED_ROLE)
-        guild_member.roles.add(verify_role)
+        let guild_member = await guild.members.fetch(user.id);
+        let verify_role = await guild.roles.fetch(process.env.VERIFIED_ROLE);
+        guild_member.roles.add(verify_role);
+
+        console.log(`${user.tag} verified!`);
 
         await collector.stop()
     })
