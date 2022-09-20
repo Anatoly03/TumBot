@@ -68,26 +68,10 @@ async function guildeMemberAdd(member) {
 }
 
 /**
- * @param {Client} client
- */
-async function init(client) {
-    if (process.env.PROD) {
-        const guild = await client.guilds.fetch(process.env.GUILD_ID)
-
-        let cache = guild.members.cache.filter(
-            (m) => !m.roles.cache.has(process.env.VERIFIED_ROLE)
-        )
-        cache.forEach(async (member) => {
-            askForLanguage(member)
-        })
-    }
-}
-
-/**
  * @param {GuildMember} member
  * @description Verify user by guiding through steps
  */
-async function askForLanguage(member) {
+export async function askForLanguage(member) {
     dm_link[member.user.id] = {
         type: 'verify',
         verification: {
@@ -133,6 +117,7 @@ async function askForLanguage(member) {
  * @description Await user asking for interaction
  */
 async function awaitLanguageOption(interaction) {
+    if (!process.env.PROD) return
     if (!interaction.isButton()) return
     if (
         !dm_link[interaction.user.id] ||
@@ -277,11 +262,6 @@ async function sendVerifyEmail(user, tum_id) {
  * @export
  */
 export default [
-    {
-        type: 'event',
-        name: 'ready',
-        run: init,
-    },
     {
         type: 'event',
         name: 'guildMemberAdd',
