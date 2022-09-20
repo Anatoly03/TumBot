@@ -62,24 +62,25 @@ const transporter = nodemailer.createTransport({
  */
 async function guildeMemberAdd(member) {
     console.log(member.user.tag, 'joined!')
-    askForLanguage(member)
+    if (process.env.PROD) {
+        askForLanguage(member)
+    }
 }
 
 /**
  * @param {Client} client
  */
 async function init(client) {
-    const guild = await client.guilds.fetch(process.env.GUILD_ID)
-    /*let cache = guild.members.cache.filter(
-        (m) => !m.roles.cache.has(process.env.VERIFIED_ROLE)
-    )
-    cache.forEach(async (member) => {
-        askForLanguage(member)
-    })*/
+    if (process.env.PROD) {
+        const guild = await client.guilds.fetch(process.env.GUILD_ID)
 
-    let member = await guild.members.fetch('366491882769088512')
-
-    askForLanguage(member)
+        let cache = guild.members.cache.filter(
+            (m) => !m.roles.cache.has(process.env.VERIFIED_ROLE)
+        )
+        cache.forEach(async (member) => {
+            askForLanguage(member)
+        })
+    }
 }
 
 /**
@@ -133,7 +134,11 @@ async function askForLanguage(member) {
  */
 async function awaitLanguageOption(interaction) {
     if (!interaction.isButton()) return
-    if (dm_link[interaction.user.id].type != 'verify') return
+    if (
+        !dm_link[interaction.user.id] ||
+        dm_link[interaction.user.id]?.type != 'verify'
+    )
+        return
 
     /*
      * STEP 1b: AWAIT LANGUAGE SELECTION

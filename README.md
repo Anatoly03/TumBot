@@ -1,4 +1,5 @@
 - Create `.env` file with
+    - `PROD =` Set to `true` if running in production mode. Set to `false` otherwise.
     - `TOKEN = DISCORD_TOKEN`
     - `GUILD_ID =`
     - `ADMIN_CHANNEL_ID = `
