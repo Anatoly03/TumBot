@@ -68,22 +68,6 @@ async function guildeMemberAdd(member) {
 }
 
 /**
- * @param {Client} client
- */
-async function init(client) {
-    if (process.env.PROD) {
-        const guild = await client.guilds.fetch(process.env.GUILD_ID)
-
-        let cache = guild.members.cache.filter(
-            (m) => !m.roles.cache.has(process.env.VERIFIED_ROLE)
-        )
-        cache.forEach(async (member) => {
-            askForLanguage(member)
-        })
-    }
-}
-
-/**
  * @param {GuildMember} member
  * @description Verify user by guiding through steps
  */
@@ -133,6 +117,7 @@ async function askForLanguage(member) {
  * @description Await user asking for interaction
  */
 async function awaitLanguageOption(interaction) {
+    if (!process.env.PROD) return
     if (!interaction.isButton()) return
     if (
         !dm_link[interaction.user.id] ||
@@ -159,7 +144,7 @@ async function awaitLanguageOption(interaction) {
  * @param {User} user
  * @description STEP 2: ENTER TUM ID
  */
-async function askForTumID(user) {
+export async function askForTumID(user) {
     const collector = await user.dmChannel.createMessageCollector({
         filter: (m) => !m.author.bot,
         time,
@@ -277,11 +262,6 @@ async function sendVerifyEmail(user, tum_id) {
  * @export
  */
 export default [
-    {
-        type: 'event',
-        name: 'ready',
-        run: init,
-    },
     {
         type: 'event',
         name: 'guildMemberAdd',
