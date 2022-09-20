@@ -238,7 +238,7 @@ async function sendVerifyEmail(user, tum_id) {
             })
             await collector.stop()
             sendVerifyEmail(user, tum_id)*/
-            return
+            return 0
         }
 
         user.send({
