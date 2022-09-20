@@ -30,8 +30,15 @@ const lang_embeds = {
         id_ask: VERIFY_EMBED.default.id_ask_en,
         email: VERIFY_EMBED.default.email_en,
         verified: VERIFY_EMBED.default.verified_en,
-        error_id: VERIFY_EMBED.default.error_id_de,
-        error_hash: VERIFY_EMBED.default.error_hash_de,
+        error_id: VERIFY_EMBED.default.error_id_en,
+        error_hash: VERIFY_EMBED.default.error_hash_en,
+    },
+    ru: {
+        id_ask: VERIFY_EMBED.default.id_ask_ru,
+        email: VERIFY_EMBED.default.email_ru,
+        verified: VERIFY_EMBED.default.verified_ru,
+        error_id: VERIFY_EMBED.default.error_id_ru,
+        error_hash: VERIFY_EMBED.default.error_hash_ru,
     },
 }
 
@@ -49,7 +56,9 @@ const transporter = nodemailer.createTransport({
 async function guildeMemberAdd(member) {
     console.log(member.user.tag, 'joined!')
 
-    const channel = await member.guild.channels.fetch(process.env.ADMIN_CHANNEL_ID)
+    const channel = await member.guild.channels.fetch(
+        process.env.ADMIN_CHANNEL_ID
+    )
     if (!channel) return
 
     dm_link[member.user.id] = {
@@ -107,6 +116,10 @@ async function askForLanguage(member) {
         new ButtonBuilder()
             .setCustomId('en')
             .setLabel('🇬🇧')
+            .setStyle(ButtonStyle.Secondary),
+        new ButtonBuilder()
+            .setCustomId('ru')
+            .setLabel('🇷🇺')
             .setStyle(ButtonStyle.Secondary)
     )
 
