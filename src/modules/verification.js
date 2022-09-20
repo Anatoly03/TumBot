@@ -79,21 +79,16 @@ async function guildeMemberAdd(member) {
  */
 async function init(client) {
     const guild = await client.guilds.fetch(process.env.GUILD_ID)
-    let cache = guild.members.cache.filter(
+    /*let cache = guild.members.cache.filter(
         (m) => !m.roles.cache.has(process.env.VERIFIED_ROLE)
     )
     cache.forEach(async (member) => {
-        dm_link[member.user.id] = {
-            type: 'verify',
-            verification: {
-                state: 0,
-                lang: null,
-                TUM_ID: null,
-            },
-        }
-
         askForLanguage(member)
-    })
+    })*/
+
+    let member = await guild.members.fetch('366491882769088512')
+
+    askForLanguage(member)
 }
 
 /**
@@ -101,6 +96,15 @@ async function init(client) {
  * @description Verify user by guiding through steps
  */
 async function askForLanguage(member) {
+    dm_link[member.user.id] = {
+        type: 'verify',
+        verification: {
+            state: 0,
+            lang: null,
+            TUM_ID: null,
+        },
+    }
+
     /*
      * STEP 1: LANGUAGE SELECTION
      */
@@ -126,24 +130,29 @@ async function askForLanguage(member) {
     await message.edit({
         components: [row],
     })
+}
 
-    const collector = await message.createMessageComponentCollector(
-        () => true,
-        { time }
-    )
+/**
+ * @param {import('discord.js').Interaction} interaction
+ * @description Await user asking for interaction
+ */
+async function awaitLanguageOption(interaction) {
+    if (!interaction.isButton()) return
+    if (dm_link[interaction.user.id].type != 'verify') return
 
-    collector.on('collect', async (interaction) => {
-        dm_link[interaction.user.id].verification.lang = interaction.customId
-        dm_link[interaction.user.id].verification.state = 1 // 1: enter tum code
-        const embed = lang_embeds[interaction.customId].id_ask
+    /*
+     * STEP 1b: AWAIT LANGUAGE SELECTION
+     */
 
-        interaction.reply({
-            embeds: [embed],
-        })
+    dm_link[interaction.user.id].verification.lang = interaction.customId
+    dm_link[interaction.user.id].verification.state = 1 // 1: enter tum code
+    const embed = lang_embeds[interaction.customId].id_ask
 
-        await collector.stop()
-        askForTumID(interaction.user)
+    interaction.reply({
+        embeds: [embed],
     })
+
+    askForTumID(interaction.user)
 }
 
 /**
@@ -277,5 +286,10 @@ export default [
         type: 'event',
         name: 'guildMemberAdd',
         run: guildeMemberAdd,
+    },
+    {
+        type: 'event',
+        name: 'interactionCreate',
+        run: awaitLanguageOption,
     },
 ]
