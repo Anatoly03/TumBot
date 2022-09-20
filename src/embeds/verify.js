@@ -13,7 +13,7 @@ export default {
                 'Wenn Sie mit der _Deutschen_ Verifikationsanleitung anmelden wollen, bitte drücken Sie die Deutsche Flagge.\n\n' +
                 '🇬🇧 Welcome to the Technical University Discord Server,\n' +
                 'To proceed with the _english_ version of the verification we ask you to press the button of the United Kingdom below.\n\n' +
-                '🇷🇺 Добро пожаловать на дискорд-сервер Технического Университета Мюнхена. Если вы хотите продолжить\n\n' +
+                '🇷🇺 Добро пожаловать на дискорд-сервер Технического Университета Мюнхена. Если вы хотите продолжить ' +
                 'с _русской_ версии верификации, нажмите на флаг России.'
         ),
 
