@@ -40,6 +40,13 @@ const lang_embeds = {
         error_id: VERIFY_EMBED.default.error_id_ru,
         error_hash: VERIFY_EMBED.default.error_hash_ru,
     },
+    ch: {
+        id_ask: VERIFY_EMBED.default.id_ask_ch,
+        email: VERIFY_EMBED.default.email_ch,
+        verified: VERIFY_EMBED.default.verified_ch,
+        error_id: VERIFY_EMBED.default.error_id_ch,
+        error_hash: VERIFY_EMBED.default.error_hash_ch,
+    },
 }
 
 const transporter = nodemailer.createTransport({
@@ -108,6 +115,10 @@ async function askForLanguage(member) {
         new ButtonBuilder()
             .setCustomId('ru')
             .setLabel('🇷🇺')
+            .setStyle(ButtonStyle.Secondary),
+        new ButtonBuilder()
+            .setCustomId('ch')
+            .setLabel('🇨🇳')
             .setStyle(ButtonStyle.Secondary)
     )
 

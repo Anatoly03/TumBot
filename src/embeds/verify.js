@@ -14,7 +14,8 @@ export default {
                 '🇬🇧 Welcome to the Technical University Discord Server,\n' +
                 'To proceed with the _english_ version of the verification we ask you to press the button of the United Kingdom below.\n\n' +
                 '🇷🇺 Добро пожаловать на дискорд-сервер Технического Университета Мюнхена. Если вы хотите продолжить ' +
-                'с _русской_ версии верификации, нажмите на флаг России.'
+                'с _русской_ версии верификации, нажмите на флаг России.\n\n' +
+                '🇨🇳 欢迎来到慕尼黑工业大学的Discord服务器， 如果您想使用中文进行认证登录， 请点击下方的国旗。'
         ),
 
     /*
@@ -38,6 +39,10 @@ export default {
         .setDescription(
             'Мы просим вас прислать вашу ТУМ-ID (пример: ab12abc) в сообщение снизу и следовать инструкциям.'
         ),
+    id_ask_ch: new EmbedBuilder()
+        .setTitle('（由学生所组织的）TUM Discord ○ 认证')
+        .setColor(0x3489eb)
+        .setDescription('请提交您的TUM ID (例如 ab12abc) 并跟随指示进行认证'),
 
     /*
      * Email sent message
@@ -63,8 +68,16 @@ export default {
         .setColor(0x3489eb)
         .setDescription(
             `На почту вашего е-майл аккаунта ТУМа был прислан верификационный код. Мы просим вас скопировать эго в этот чат.
-            [TUM-Email Guide](https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/pl/ui/$ctx/help.file_help?$ctx=design=ca2;header=max;lang=de&app_kb=BM&corg=&seite_nr=500231&sprache_nr=1 'Как получить допуск к е-майлу ТУМа')
+            [TUM е-майл гайд](https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/pl/ui/$ctx/help.file_help?$ctx=design=ca2;header=max;lang=de&app_kb=BM&corg=&seite_nr=500231&sprache_nr=1 'Как получить допуск к е-майлу ТУМа')
             Код послали на:`
+        ),
+    email_ch: new EmbedBuilder()
+        .setTitle('（由学生所组织的）TUM Discord ○ 认证')
+        .setColor(0x3489eb)
+        .setDescription(
+            `我们会将认证码以电子邮件的形式发送至您的邮箱，请注意查收。请在这输入您所收到的认证码
+            [TUM电子邮件说明](https://campus.tum.de/tumonline/ee/ui/ca2/app/desktop/#/pl/ui/$ctx/help.file_help?$ctx=design=ca2;header=max;lang=de&app_kb=BM&corg=&seite_nr=500231&sprache_nr=1)
+            邮件将会送往:`
         ),
 
     /*
@@ -128,6 +141,24 @@ export default {
                 value: 'Удачи!',
             },
         ]),
+    verified_ch: new EmbedBuilder()
+        .setTitle('欢迎您的到来!')
+        .setColor(0x3489eb)
+        .setDescription('欢迎来到由学生自发组织的 TUM Discord 服务器')
+        .addFields([
+            {
+                name: '步骤一',
+                value: '请您先阅读一下 <#1020286040080130048> 频道。在您使用服务器期间，有义务遵守这些规则。',
+            },
+            {
+                name: '步骤二',
+                value: '另外，请您也在 <#1020306342528962640> 频道中选择一下自己的专业。这样您就可以加入自己专业的讨论频道啦！',
+            },
+            {
+                name: '步骤三',
+                value: '玩的开心！',
+            },
+        ]),
 
     /*
      * This embed follows the second if the the TUM Id is invalid.
@@ -150,6 +181,10 @@ export default {
         .setDescription(
             'ID, который вы представили неверен. Попробуйте ещё раз.'
         ),
+    error_id_ch: new EmbedBuilder()
+        .setTitle('无效的TUM ID !')
+        .setColor(0xf27950)
+        .setDescription('这是个无效的TUM Id, 请您再次尝试并输入有效的Id。'),
 
     /*
      * This embed follows the third if the the verification hash is invalid.
@@ -170,4 +205,8 @@ export default {
         .setTitle('Неверный код')
         .setColor(0xf27950)
         .setDescription('Мы просим вас представить код полученный в е-майле'),
+    error_hash_ch: new EmbedBuilder()
+        .setTitle('无效的认证码！')
+        .setColor(0xf27950)
+        .setDescription('请您再次输入您由邮件收到的认证码。'),
 }
