@@ -1,5 +1,4 @@
 - Create `.env` file with
-    - `PROD =` Set to `true` if running in production mode. Set to `false` otherwise.
     - `TOKEN = DISCORD_TOKEN`
     - `GUILD_ID =`
     - `ADMIN_CHANNEL_ID = `
@@ -9,3 +8,4 @@
     - `EMAIL_USER =` Used for verification email account
     - `EMAIL_PASSWORD =` The [App Password](https://stackoverflow.com/questions/45478293/username-and-password-not-accepted-when-using-nodemailer)
 - `npm run start` to initiate process
+- `npm run dev` to initiate debugging process
