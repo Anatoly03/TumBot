@@ -1,4 +1,4 @@
-import { ChannelType, Message } from 'discord.js'
+import { ChannelType, Message, PermissionFlagsBits } from 'discord.js'
 import { askForLanguage } from './verification.js'
 
 /**
@@ -13,6 +13,9 @@ async function message_command(message) {
     const params = message.content.slice(1).split(' ')
 
     if (params[0] == 'verify') {
+        // Check if user is admin
+        if (!message.member.permissions.has(PermissionFlagsBits.Administrator)) return
+
         if (message.mentions.members.size > 0) {
             message.mentions.members.forEach((m) => {
                 askForLanguage(m)

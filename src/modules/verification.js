@@ -167,20 +167,33 @@ async function askForTumID(user) {
         dm_link[user.id].verification.TUM_ID = message.content
         dm_link[user.id].verification.state = 2 // 2: await verification
         let embed = lang_embeds[dm_link[user.id].verification.lang].email
-        embed.data.description += `${
-            dm_link[user.id].verification.TUM_ID
-        }@mytum.de`
+
+
+
 
         await collector.stop()
         let status = await sendVerifyEmail(
             user,
             dm_link[user.id].verification.TUM_ID
         )
+
+
         if (status == 1) {
+
+            //for extra extra safety in case we ever decide to catch user.send errors below
+            if(embed.data.description.endsWith("@mytum.de")){
+                embed.data.description = embed.data.description.slice(0, embed.data.description.length - "ab12cde@mytum.de".length);
+            }
+
+            embed.data.description += `${dm_link[user.id].verification.TUM_ID}@mytum.de`;
             user.send({
                 embeds: [embed],
             })
+            embed.data.description = embed.data.description.slice(0, embed.data.description.length - "ab12cde@mytum.de".length);
         }
+
+
+
     })
 }
 
@@ -218,9 +231,9 @@ async function sendVerifyEmail(user, tum_id) {
         user.send({
             embeds: [embed],
         })
-        askForTumID(user)
+        askForTumID(user);
         //console.log(e)
-        return 0
+        return 0;
     }
 
     const collector = await user.dmChannel.createMessageCollector({
@@ -229,8 +242,8 @@ async function sendVerifyEmail(user, tum_id) {
     })
 
     collector.on('collect', async (message) => {
-        const guild = await message.client.guilds.fetch(process.env.GUILD_ID)
-        const embed = lang_embeds[dm_link[user.id].verification.lang].verified
+        const guild = await message.client.guilds.fetch(process.env.GUILD_ID);
+        const embed = lang_embeds[dm_link[user.id].verification.lang].verified;
 
         if (hash != message.content) {
             /*const embed = lang_embeds[dm_link[user.id].verification.lang].error_hash
@@ -239,18 +252,20 @@ async function sendVerifyEmail(user, tum_id) {
             })
             await collector.stop()
             sendVerifyEmail(user, tum_id)*/
-            return 0
+            return 0;
         }
 
         user.send({
             embeds: [embed],
-        })
+        });
 
-        delete dm_link[user.id]
+        delete dm_link[user.id];
 
-        let guild_member = await guild.members.fetch(user.id)
-        let verify_role = await guild.roles.fetch(process.env.VERIFIED_ROLE)
-        guild_member.roles.add(verify_role)
+        let guild_member = await guild.members.fetch(user.id);
+        let verify_role = await guild.roles.fetch(process.env.VERIFIED_ROLE);
+        guild_member.roles.add(verify_role);
+
+        console.log(`${user.tag} verified!`);
 
         await collector.stop()
     })
