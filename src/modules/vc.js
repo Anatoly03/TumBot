@@ -33,31 +33,33 @@ async function voiceStateUpdate(oldState, newState) {
  * Second, if two or more voice channels are empty, get rid of them.
  */
 async function recalculate(client) {
+    if (!process.env.PROD) console.log("Debug vc.js: recalculating...");
     const guild = await client.guilds.fetch(process.env.GUILD_ID)
         .catch(e => {
             console.log("Error vc.js: Invalid environment GUILD_ID (fetch failed)");
             throw e;
         });
-
+    
     const category_channel = await guild.channels.fetch(
         process.env.GENERAL_VOICE_CATEGORY
     ).catch(e => {
         console.log('Error vc.js: General VC Category Id is invalid (fetch failed)');
         throw e;
     });
-
+    if (!process.env.PROD) console.log("Debug vc.js: populating voice_channels...");
     category_channel.children.cache.forEach((vc) => {
         voice_channels[vc.id] = vc.members.map(m => m.id)
     })
 
+    if (!process.env.PROD) console.log("Debug vc.js: finding empty channels...");
     let empty = [];
-
     Object.keys(voice_channels).forEach(channel_id => {
         if (voice_channels[channel_id].length == 0) empty.push(channel_id);
     })
 
     // There are no empty voice channels.
     if (empty.length == 0) {
+        if (!process.env.PROD) console.log("Debug vc.js: no empty voice channels, creating a new one");
         let vc = await guild.channels.create({
             name: 'VC',
             type: ChannelType.GuildVoice,
@@ -67,10 +69,12 @@ async function recalculate(client) {
         })
         voice_channels[vc.id] = [];
         vc.setParent(process.env.GENERAL_VOICE_CATEGORY);
+        if (!process.env.PROD) console.log("Debug vc.js: Voice channel created successfully");
     }
 
     // There are two or more channels empty.
     else if (empty.length > 1) {
+        if (!process.env.PROD) console.log("Debug vc.js: deleting empty channels");
         for (let i = 0; i < empty.length - 1; i++) {
             let vc = await guild.channels.fetch(empty[i])
                 .catch(e => {
@@ -82,6 +86,7 @@ async function recalculate(client) {
         }
     }
 
+    if (!process.env.PROD) console.log("Debug vc.js: renaming channels...");
     let i = 1
     Object.keys(voice_channels).forEach(async (channel_id) => {
         let vc = await guild.channels.fetch(channel_id)
