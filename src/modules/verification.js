@@ -179,11 +179,17 @@ async function askForTumID(user) {
 
 
         if (status == 1) {
+
+            //for extra extra safety in case we ever decide to catch user.send errors below
+            if(embed.data.description.endsWith("@mytum.de")){
+                embed.data.description = embed.data.description.slice(0, embed.data.description.length - "ab12cde@mytum.de".length);
+            }
+
             embed.data.description += `${dm_link[user.id].verification.TUM_ID}@mytum.de`;
             user.send({
                 embeds: [embed],
             })
-            embed.data.description = embed.data.description.slice(0, embed.data.description.length - "ab12cde@mytum.de".length)
+            embed.data.description = embed.data.description.slice(0, embed.data.description.length - "ab12cde@mytum.de".length);
         }
 
 
