@@ -48,8 +48,7 @@ async function recalculate(client) {
     });
     if (!process.env.PROD) console.log("Debug vc.js: populating voice_channels...");
     category_channel.children.cache.forEach((vc) => {
-        voice_channels[vc.id] = vc.members.map(m => m.id);
-        //console.log(vc.id,vc.members.map((m) => m.id))
+        voice_channels[vc.id] = vc.members.map(m => m.id)
     })
 
     if (!process.env.PROD) console.log("Debug vc.js: finding empty channels...");
