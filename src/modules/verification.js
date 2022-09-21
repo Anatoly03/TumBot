@@ -168,15 +168,11 @@ async function askForTumID(user) {
         dm_link[user.id].verification.state = 2 // 2: await verification
         let embed = lang_embeds[dm_link[user.id].verification.lang].email
 
-
-
-
         await collector.stop()
         let status = await sendVerifyEmail(
             user,
             dm_link[user.id].verification.TUM_ID
         )
-
 
         if (status == 1) {
 

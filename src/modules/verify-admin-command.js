@@ -14,7 +14,7 @@ async function message_command(message) {
 
     if (params[0] == 'verify') {
         // Check if user is admin
-        if (!message.member.permissions.has(PermissionFlagsBits.Administrator)) {
+        if (message.member.permissions.has(PermissionFlagsBits.Administrator)) {
             if (message.mentions.members.size > 0) {
                 message.mentions.members.forEach((m) => {
                     askForLanguage(m)
