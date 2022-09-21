@@ -239,7 +239,18 @@ async function sendVerifyEmail(user, tum_id) {
 
     collector.on('collect', async (message) => {
         const guild = await message.client.guilds.fetch(process.env.GUILD_ID);
-        const embed = lang_embeds[dm_link[user.id].verification.lang].verified;
+        let embed;
+        let error;
+        try {
+            embed = lang_embeds[dm_link[user.id].verification.lang].verified;
+        } catch (err) {
+            error = err;
+        }
+
+        if(error){
+            console.log("Error in verification.js. Message:", message, "Error: ", error);
+            return;
+        }
 
         if (hash != message.content) {
             /*const embed = lang_embeds[dm_link[user.id].verification.lang].error_hash
