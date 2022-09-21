@@ -47,8 +47,7 @@ async function recalculate(client) {
     });
 
     category_channel.children.cache.forEach((vc) => {
-        voice_channels[vc.id] = vc.members.map(m => m.id);
-        //console.log(vc.id,vc.members.map((m) => m.id))
+        voice_channels[vc.id] = vc.members.map(m => m.id)
     })
 
     let empty = [];
