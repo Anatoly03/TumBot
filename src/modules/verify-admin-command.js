@@ -14,13 +14,15 @@ async function message_command(message) {
 
     if (params[0] == 'verify') {
         // Check if user is admin
-        if (!message.member.permissions.has(PermissionFlagsBits.Administrator)) return
+        if (!message.member.permissions.has(PermissionFlagsBits.Administrator)) {
+            if (message.mentions.members.size > 0) {
+                message.mentions.members.forEach((m) => {
+                    askForLanguage(m)
+                })
+            }
 
-        if (message.mentions.members.size > 0) {
-            message.mentions.members.forEach((m) => {
-                askForLanguage(m)
-            })
         } else {
+            //Allow users to verify themselves
             const verified = message.member.roles.cache.has(process.env.VERIFIED_ROLE)
             if (!verified) {
                 askForLanguage(message.member)
