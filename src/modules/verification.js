@@ -60,7 +60,7 @@ const transporter = nodemailer.createTransport({
 /**
  * @param {GuildMember} member
  */
-async function guildeMemberAdd(member) {
+async function guildMemberAdd(member) {
     console.log(member.user.tag, 'joined!')
     if (process.env.PROD) {
         askForLanguage(member)
@@ -72,21 +72,38 @@ async function guildeMemberAdd(member) {
  * @description Verify user by guiding through steps
  */
 export async function askForLanguage(member) {
+    
+    /*
+     * STEP 1: LANGUAGE SELECTION
+     */
+    let messageFail = false;
+    let message = await member.send({
+        embeds: [VERIFY_EMBED.default.lang_ask],
+    }).catch(e => {
+        console.log(`Error in verification.js: Could not send message to ${member.user.tag}. It is possible this user does not allow DMs from this bot.`);
+        console.log(e);
+        messageFail = true;
+    })
+
+    if(messageFail){
+        //notify the user and ask them to enable DMs?
+
+        //notify admins for now
+        let channel = await guild.channels.fetch(process.env.ADMIN_CHANNEL_ID);
+        channel.send(`Could not send message to ${member.user.tag}. It is possible this user does not allow DMs from this bot.`)
+
+        return;
+    }
+
     dm_link[member.user.id] = {
         type: 'verify',
         verification: {
             state: 0,
-            lang: null,
+            lang: null, //yikes, null aka the billion dollar mistake. Look it up, quite interesting.
             TUM_ID: null,
         },
     }
 
-    /*
-     * STEP 1: LANGUAGE SELECTION
-     */
-    let message = await member.send({
-        embeds: [VERIFY_EMBED.default.lang_ask],
-    })
 
     const row = new ActionRowBuilder().addComponents(
         new ButtonBuilder()
@@ -287,7 +304,7 @@ export default [
     {
         type: 'event',
         name: 'guildMemberAdd',
-        run: guildeMemberAdd,
+        run: guildMemberAdd,
     },
     {
         type: 'event',
