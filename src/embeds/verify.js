@@ -9,9 +9,9 @@ export default {
         .setColor(0x3489eb)
         .setThumbnail('https://i.imgur.com/mCer5Za.png')
         .setDescription(
-            '🇩🇪 Herlich Willkommen an dem TUM Discord Server,\n' +
+            '🇩🇪 Herzlich willkommen auf dem TUM Discord Server für Info-Erstis,\n' +
                 'Wenn Sie mit der _Deutschen_ Verifikationsanleitung anmelden wollen, bitte drücken Sie die Deutsche Flagge.\n\n' +
-                '🇬🇧 Welcome to the Technical University Discord Server,\n' +
+                '🇬🇧 Welcome to the Discord server for first-year Informatik students,\n' +
                 'To proceed with the _english_ version of the verification we ask you to press the button of the United Kingdom below.\n\n' +
                 '🇷🇺 Добро пожаловать на дискорд-сервер Технического Университета Мюнхена. Если вы хотите продолжить ' +
                 'с _русской_ версии верификации, нажмите на флаг России.\n\n' +
