@@ -25,7 +25,8 @@ async function message_command(message) {
             //Allow users to verify themselves
             const verified = message.member.roles.cache.has(process.env.VERIFIED_ROLE)
             if (!verified) {
-                askForLanguage(message.member)
+                console.log(`Asking ${message.member.user.name} to select a language because they wrote !verify`);
+                askForLanguage(message.member, {message})
             }
         }
     }

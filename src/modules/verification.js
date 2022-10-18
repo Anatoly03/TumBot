@@ -57,12 +57,16 @@ const transporter = nodemailer.createTransport({
     },
 })
 
+//this is a disgusting chain of functions
+
 /**
  * @param {GuildMember} member
  */
 async function guildMemberAdd(member) {
     console.log(member.user.tag, 'joined!')
     if (process.env.PROD) {
+        //pretty sure this is broken but I'll just leave it
+        console.log(`Automatically asking ${member.user.name} to select a language.`)
         askForLanguage(member)
     }
 }
@@ -71,29 +75,38 @@ async function guildMemberAdd(member) {
  * @param {GuildMember} member
  * @description Verify user by guiding through steps
  */
-export async function askForLanguage(member) {
-    
+export async function askForLanguage(member, meta = {}) {
+
     /*
      * STEP 1: LANGUAGE SELECTION
      */
-    let messageFail = false;
+    // let messageFail = false;
     let message = await member.send({
         embeds: [VERIFY_EMBED.default.lang_ask],
     }).catch(e => {
         console.log(`Error in verification.js: Could not send message to ${member.user.tag}. It is possible this user does not allow DMs from this bot.`);
         console.log(e);
-        messageFail = true;
+
+        //notify user
+        if(meta?.message){
+            meta.message.reply(`I could not send you a DM :( please check your settings and try again.\nIf the problem persists, contact the admins.`)
+        }
+
+        member.user.send(``)
+        // messageFail = true;
     })
 
-    if(messageFail){
-        //notify the user and ask them to enable DMs?
+    // if(messageFail){
+    //     //notify the user and ask them to enable DMs?
 
-        //notify admins for now
-        let channel = await guild.channels.fetch(process.env.ADMIN_CHANNEL_ID);
-        channel.send(`Could not send message to ${member.user.tag}. It is possible this user does not allow DMs from this bot.`)
 
-        return;
-    }
+    //     //notify admins for now
+    //     // let guild = message.client.guilds.fetch(process.env.GUILD_ID);
+    //     // let channel = await guild.channels.fetch(process.env.ADMIN_CHANNEL_ID);
+    //     // channel.send(`Could not send message to ${member.user.tag}. It is possible this user does not allow DMs from this bot.`)
+
+    //     return;
+    // }
 
     dm_link[member.user.id] = {
         type: 'verify',
@@ -139,8 +152,9 @@ async function awaitLanguageOption(interaction) {
     if (
         !dm_link[interaction.user.id] ||
         dm_link[interaction.user.id]?.type != 'verify'
-    )
+    ) {
         return
+    }
 
     /*
      * STEP 1b: AWAIT LANGUAGE SELECTION
@@ -194,7 +208,7 @@ async function askForTumID(user) {
         if (status == 1) {
 
             //for extra extra safety in case we ever decide to catch user.send errors below
-            if(embed.data.description.endsWith("@mytum.de")){
+            if (embed.data.description.endsWith("@mytum.de")) {
                 embed.data.description = embed.data.description.slice(0, embed.data.description.length - "ab12cde@mytum.de".length);
             }
 
@@ -229,10 +243,12 @@ async function sendVerifyEmail(user, tum_id) {
             },
             function (error, info) {
                 if (error) {
-                    err(error)
+                    // err(error)
+                    console.error(error)
                 } else {
-                    res()
+                    // res()
                     //console.log('Email sent: ' + info.response)
+                    console.log(`Email sent to ${user.tag}`);
                 }
             }
         )
@@ -264,7 +280,7 @@ async function sendVerifyEmail(user, tum_id) {
             error = err;
         }
 
-        if(error){
+        if (error) {
             console.log("Error in verification.js. Message:", message, "Error: ", error);
             return;
         }
