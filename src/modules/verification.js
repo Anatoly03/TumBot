@@ -89,10 +89,9 @@ export async function askForLanguage(member, meta = {}) {
 
         //notify user
         if(meta?.message){
-            meta.message.reply(`I could not send you a DM :( please check your settings and try again.\nIf the problem persists, contact the admins.`)
+            meta.message.reply(`I could not send you a DM :( please check your settings and try again.\nIf the problem persists, contact the admins.`);
         }
-
-        member.user.send(``)
+        return;
         // messageFail = true;
     })
 
