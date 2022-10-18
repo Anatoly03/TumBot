@@ -66,7 +66,7 @@ async function guildMemberAdd(member) {
     console.log(member.user.tag, 'joined!')
     if (process.env.PROD) {
         //pretty sure this is broken but I'll just leave it
-        console.log(`Automatically asking ${member.user.name} to select a language.`)
+        console.log(`Automatically asking ${member.user.tag} to select a language.`)
         askForLanguage(member)
     }
 }
