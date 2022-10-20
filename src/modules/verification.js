@@ -80,7 +80,7 @@ export async function askForLanguage(member, meta = {}) {
     /*
      * STEP 1: LANGUAGE SELECTION
      */
-    // let messageFail = false;
+    let messageFail = false;
     let message = await member.send({
         embeds: [VERIFY_EMBED.default.lang_ask],
     }).catch(e => {
@@ -88,24 +88,16 @@ export async function askForLanguage(member, meta = {}) {
         console.log(e);
 
         //notify user
-        if(meta?.message){
+        if (meta?.message) {
             meta.message.reply(`I could not send you a DM :( please check your settings and try again.\nIf the problem persists, contact the admins.`);
         }
-        return;
-        // messageFail = true;
+        // return;
+        messageFail = true;
     })
 
-    // if(messageFail){
-    //     //notify the user and ask them to enable DMs?
-
-
-    //     //notify admins for now
-    //     // let guild = message.client.guilds.fetch(process.env.GUILD_ID);
-    //     // let channel = await guild.channels.fetch(process.env.ADMIN_CHANNEL_ID);
-    //     // channel.send(`Could not send message to ${member.user.tag}. It is possible this user does not allow DMs from this bot.`)
-
-    //     return;
-    // }
+    if (messageFail) {
+        return;
+    }
 
     dm_link[member.user.id] = {
         type: 'verify',
