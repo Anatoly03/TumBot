@@ -6,11 +6,11 @@ export default [
         .setColor(0x3489eb)
         //.setThumbnail('https://upload.wikimedia.org/wikipedia/commons/b/ba/Tum_logo.gif')
         .setImage(
-            'https://www.rubner.com/fileadmin/_processed_/d/3/csm_Blick_01_c_90193daba8.jpg'
+            'https://www.ma.tum.de/_Resources/Persistent/d/f/5/d/df5d3bd36fde654b87cdc2c269d98871fda7e65e/Campus%20Garching%20Forschungszentrum-4608x2592.jpg'
         ),
     new EmbedBuilder()
         .setTitle('Allgemeines Regelwerk')
-        .setColor(0x3489eb)
+        .setColor(0x007bff)
         .setDescription(
             ':purple_heart: **Seid nett** und bleibt cool. **Respektiert** euch gegenseitig. Keine Insulte, Drohungen, Mobbing oder persönliche Angriffe sind zugelassen.\n\n' +
                 ':small_blue_diamond: Befolgt die [Discord Community Guidelines](https://discord.com/guidelines) und [Discord Nutzungsbedingungen](https://discord.com/terms). Alle [Gesetzte der Bundesrepublik Deutschland](https://www.gesetze-im-internet.de/gg/BJNR000010949.html) sind einzuhalten. Die Moderation erweitert die Geltung der Regeln für alle auf dem Server sichtbaren Inhalte (Chat, Name, Profilbild, Beschreibung, et cetera)\n\n' +
@@ -23,14 +23,21 @@ export default [
                 ':fleur_de_lis: Die Nichtbefolgung der Regeln kann zum Stummschalten führen. Die Moderation hat das Recht die Regeln zu jeder Zeit zu ändern.'
         ),
     new EmbedBuilder()
-        .setTitle('ℹ️ Informationen')
-        .setColor(0x3489eb)
+        .setTitle('ℹ️ Links')
+        .setColor(0x17a2b8)
         .setDescription(
-            ':small_orange_diamond: Discord Einlade-Link: https://discord.gg/jpRd9JnGjK\n' +
-                ':small_orange_diamond: [Campus](https://campus.tum.de/)\n' +
-                ':small_orange_diamond: [Moodle](https://www.moodle.tum.de/)\n' +
-                ':small_orange_diamond: **[MATHE VORKURS VORLESUNGS CHAT](https://chat.tum.de/channel/Mathe-Vorkurs-2022-Vorlesung)**\n' +
-                ':small_orange_diamond: Passwort Moodle: `DantorCbntorCaotor`\n' +
-                ':small_orange_diamond: Passwort Unterlagen: `aABbAaaABbbB`'
+            `:small_orange_diamond: Discord (Einlade-Link): https://discord.gg/jpRd9JnGjK
+            :small_orange_diamond: [Campus](https://campus.tum.de/)
+            :small_orange_diamond: [Moodle](https://www.moodle.tum.de/)`
+        ),
+    new EmbedBuilder()
+        .setTitle('✅ Verifikation')
+        .setColor(0x28a745)
+        .setDescription(
+            `🇩🇪 Um sich zu verifizieren und Zugang zum Server zu kriegen bitten wir Sie den Instruktionen von <@1020349732746436728> zu folgen.
+            Bei Problemen können Sie in <#1021690009759256606> mit dem Admin-Team in Kontakt treten.
+            
+            🇬🇧 To verify and gain access to the server, please follow the instructions provided by <@1020349732746436728>.
+            If you have troubles verifying, please feel free to ask for help in <#1021690009759256606>`
         ),
 ]
