@@ -174,7 +174,7 @@ async function askForTumID(user) {
 
     collector.on('collect', async (message) => {
         // Find TUM ID in message
-        const idRegex = /[a-z]{2}[0-9]{2}[a-z]{3}/i
+        const idRegex = /^[a-z]{2}[0-9]{2}[a-z]{3}$/i
         if (!idRegex.test(message.content)) {
             const embed =
                 lang_embeds[dm_link[user.id].verification.lang].error_id
